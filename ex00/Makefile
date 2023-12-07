@@ -1,0 +1,33 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: raitmous <raitmous@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/12/06 00:21:32 by raitmous          #+#    #+#              #
+#    Updated: 2023/12/06 00:21:47 by raitmous         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+SRCS	= main.cpp BitcoinExchange.cpp
+OBJS	= ${SRCS:.cpp=.o}
+CXXFLAGS	= -Wall -Wextra -Werror -std=c++98
+RM		= rm -rf
+NAME	= BitcoinExchange
+CXX = c++
+
+all	: ${NAME}
+
+${NAME} : 
+	${CXX} ${CXXFLAGS} ${SRCS} -o ${NAME}
+
+clean :
+	${RM} ${OBJS}
+
+fclean : clean
+	${RM} ${NAME}
+
+re : fclean all
+
+a : all clean
