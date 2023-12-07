@@ -6,7 +6,7 @@
 /*   By: raitmous <raitmous@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 08:25:29 by raitmous          #+#    #+#             */
-/*   Updated: 2023/12/06 10:33:20 by raitmous         ###   ########.fr       */
+/*   Updated: 2023/12/07 01:32:14 by raitmous         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,11 @@ int RPN::calculate(int number1, int number2, char op) const {
 		case '+': return number1 + number2;
 		case '-': return number1 - number2;
 		case '*': return number1 * number2;
-		case '/': return number1 / number2;
+		case '/':
+			if (number2 == 0) {
+			throw std::runtime_error("Error: division by zero");
+			}
+			return number1 / number2;
 		default: return 0;  // Invalid operator
 	}
 }
@@ -52,8 +56,7 @@ int RPN::evaluate () {
 		// 	throw std::runtime_error ("Error");
 		// }
 		if (isdigit(c)) {
-			int number = 0;
-			number = c - '0';
+			int number = c - '0';
 			numbers.push(number);
 		}
 		else if (isOperator (c)) {
@@ -65,7 +68,7 @@ int RPN::evaluate () {
 				int number2 = numbers.top();
 				numbers.pop();
 				
-				int result = calculate(number1, number2, c);
+				int result = calculate(number2, number1, c);
 				numbers.push(result);
 			} catch (std::exception &e) {
 				std::cout << e.what() << "'" << c << "'";
