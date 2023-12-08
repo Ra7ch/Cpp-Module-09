@@ -6,7 +6,7 @@
 /*   By: raitmous <raitmous@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:50:21 by raitmous          #+#    #+#             */
-/*   Updated: 2023/12/07 00:05:11 by raitmous         ###   ########.fr       */
+/*   Updated: 2023/12/08 03:36:10 by raitmous         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <iomanip>
 #include <list>
 #include <vector>
@@ -22,10 +23,12 @@
 #include <stdlib.h>
 #include <exception>
 #include <ctime>
+#include <climits>
 
 class PmergeMe {
     private :
 		std::vector<int> unsortedVector;
+
 		std::vector<int> sortedVector;
 		std::deque<int> unsortedDeque;
 		std::deque<int> sortedDeque;
@@ -35,8 +38,9 @@ class PmergeMe {
 	public :
 		PmergeMe ();
 		PmergeMe (std::vector<int>& V, std::deque<int>& L);
+		
 		PmergeMe (std::vector<int>& V);
-
+		
 		PmergeMe (std::deque<int>& D);
 
 		PmergeMe(const PmergeMe& other);
@@ -51,8 +55,7 @@ class PmergeMe {
 		void sortDeque(std::deque<int>& deque) ;
 
 		void mergeDeque(std::deque<int>& deque, std::deque<int>& left, std::deque<int>& right, int leftBoundary, int rightBoundary) ;
-		// Sorting with Ford-Johnson algorithm for std::vector
-		void sortVectorFJ(std::vector<int> &vector);
+		
 		// Geters
 		std::vector<int> getUnsortedVector () const;
 		std::vector<int> getSortedVector () const;
@@ -62,6 +65,8 @@ class PmergeMe {
 		double getDequeTime() const;
 		
 
+		// Sorting with Ford-Johnson algorithm for std::vector
+		void sortVectorFJ(std::vector<int> &vector);
 
 
 		// Sorting with Ford-Johnson algorithm for std::deque
@@ -69,3 +74,5 @@ class PmergeMe {
 
 		~PmergeMe ();
 };
+
+

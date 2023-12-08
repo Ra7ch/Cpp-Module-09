@@ -6,7 +6,7 @@
 /*   By: raitmous <raitmous@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:50:16 by raitmous          #+#    #+#             */
-/*   Updated: 2023/12/07 00:19:11 by raitmous         ###   ########.fr       */
+/*   Updated: 2023/12/08 03:35:03 by raitmous         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,15 @@ void printData (PmergeMe& P, PmergeMe& D) {
 	          << " us" << std::endl;
 }
 
+void max_int(char *str)
+{
+	int i = -1;
+	while (str[++i])
+		;
+	if (i > 11 || (i == 10 && (strncmp("2147483647", str, i) < 0)))
+		throw std::runtime_error ("Error: Input out of bounds");
+}
+
 int main (int argc, char **argv) {
 	std::vector<int> vec;
 	std::deque <int> deq;
@@ -54,12 +63,21 @@ int main (int argc, char **argv) {
 		if (argc < 2)
 			throw std::runtime_error ("Not enough arguments");
 		for (int i = 1; i < argc; i += 1)
-			if (std::string(argv[i]).find_first_not_of("0123456789 ") != std::string::npos)
+			if (std::string(argv[i]).find_first_not_of("0123456789") != std::string::npos)
 				throw std::runtime_error ("Error: Unvalid Element");
 		std::vector<unsigned int>temp;
-		for (int i = 1; i < argc; i += 1)
+		long long tmp;
+		for (int i = 1; i < argc; i += 1) {
+			if (strlen(argv[i]) == 0)
+				continue;
+			tmp = atoi(argv[i]);
+			if (tmp < 0)
+				throw std::runtime_error ("Error: Input out of bounds");
+			max_int(argv[i]);
 			temp.push_back(atoi(argv[i]));
-
+		}
+		if (temp.size() == 0)
+			throw std::runtime_error ("Not enough elements");
 		std::vector<unsigned int>::iterator itr;
 		std::vector<unsigned int>::iterator itr2;
 		for (itr = temp.begin(); itr != temp.end(); itr++)
@@ -72,10 +90,23 @@ int main (int argc, char **argv) {
 		std::cout << e.what() << std::endl;
 		return 0;
 	}
-	for (int i = 1; argv[i]; i++)
+	for (int i = 1; argv[i]; i++) {
+		if (strlen(argv[i]) == 0)
+			continue;
 		vec.push_back(atoi(argv[i]));
-	for (int i = 1; argv[i]; i++)
+	}
+	for (int i = 1; argv[i]; i++){
+		if (strlen(argv[i]) == 0)
+			continue;
 		deq.push_back(atoi(argv[i]));
+	}
+
+	std::vector <std::pair<int, int>* > Vp;
+	std::vector<std::pair<int, int> > pairs;
+	for (int i = 1; argv[i]; i++) {
+		// Create a copy of the pair using std::make_pair
+		pairs.push_back(std::make_pair(atoi(argv[i]), i));
+	}
 	
 	PmergeMe P (vec);
 	PmergeMe D (deq);
