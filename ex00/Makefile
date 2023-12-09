@@ -6,7 +6,7 @@
 #    By: raitmous <raitmous@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/06 00:21:32 by raitmous          #+#    #+#              #
-#    Updated: 2023/12/06 00:21:47 by raitmous         ###   ########.fr        #
+#    Updated: 2023/12/09 05:22:53 by raitmous         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ SRCS	= main.cpp BitcoinExchange.cpp
 OBJS	= ${SRCS:.cpp=.o}
 CXXFLAGS	= -Wall -Wextra -Werror -std=c++98
 RM		= rm -rf
-NAME	= BitcoinExchange
+NAME	= btc
 CXX = c++
 
 all	: ${NAME}

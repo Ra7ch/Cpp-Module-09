@@ -6,7 +6,7 @@
 /*   By: raitmous <raitmous@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 18:40:25 by raitmous          #+#    #+#             */
-/*   Updated: 2023/12/07 00:59:49 by raitmous         ###   ########.fr       */
+/*   Updated: 2023/12/08 03:58:01 by raitmous         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 #include "BitcoinExchange.hpp"
 
 int main (int argc, char **argv) {
-    if (argc > 3 || argc < 2)
-        return 0;
+    if (argc > 2 || argc < 2)
+        return (std::cerr << "Error: Input count is wrong" << std::endl, 0);
     
    // std::istringstream ss(argv[1]);
     // std::string date;

@@ -6,7 +6,7 @@
 /*   By: raitmous <raitmous@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:50:18 by raitmous          #+#    #+#             */
-/*   Updated: 2023/12/08 03:12:54 by raitmous         ###   ########.fr       */
+/*   Updated: 2023/12/09 07:14:39 by raitmous         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ void PmergeMe::mergeDeque(std::deque<int>& deque, std::deque<int>& left, std::de
 
 // Sorting with Ford-Johnson algorithm for std::vector
 void PmergeMe::sortVectorFJ(std::vector<int> &vector) {
+	bool odd = false;
 	if (vector.size() < 2) {
 		return ;
 	}
@@ -153,10 +154,11 @@ void PmergeMe::sortVectorFJ(std::vector<int> &vector) {
 	for (size_t i = 0; i < vector.size(); i += 2) {
 		if (i < vector.size() - 1) {
 			// Create a pair with the two elements
-			std::pair <int, int > p(vector[i], vector[i + 1]);
+			std::pair <int, int > p(vector[i + 1], vector[i]);
 			pairs.push_back(p);
 		} else {
 			// If odd number of elements, add the last element as a pair with itself
+			odd = true;
 			std::pair <int, int > p(vector[i], vector[i]);
 			pairs.push_back(p);
 		}
@@ -176,10 +178,20 @@ void PmergeMe::sortVectorFJ(std::vector<int> &vector) {
 	PmergeMe::sortVectorFJ(Larg);
 
 	// 4. Insert the unpaired element and sort remaining elements
-	if (vector.size() % 2 != 0) {
+	if (odd == true) {
 		Small.pop_back();
 	}
-
+/////////////////////////////////////
+	// insert the element paired with the smalles of Larg
+	for (size_t i = 0; i < pairs.size() - 1; i++)
+	{
+		if (pairs[i].first == Larg[0]) {
+			Larg.insert (Larg.begin(), Small[i]);
+			Small.erase (Small.begin() + i);
+			break ;
+		}
+	}
+//////////////////////////////////////
 	// 5. Merge the sorted Larg elements with the Small elements
 	// using insertion sort with binary search for efficiency
 	for (size_t i = 0; i < Small.size(); i++) {
@@ -200,16 +212,13 @@ void PmergeMe::sortVectorFJ(std::vector<int> &vector) {
 	vector = Larg;
 }
 
-
-
 // Sorting with Ford-Johnson algorithm for std::deque
 void PmergeMe::sortDequeFJ(std::deque<int> &deque) {
+	bool odd = false;
 	if (deque.size() < 2) {
 		return ;
 	}
 
-	std::deque<int> Larg;
-	std::deque<int> Small;
 	// 1. Grouping and Pairwise comparison
 	size_t mid = deque.size() / 2;
 	// Separate the last element if odd
@@ -218,29 +227,57 @@ void PmergeMe::sortDequeFJ(std::deque<int> &deque) {
 	}
 
 	// Group and compare elements in pairs
-	for (size_t i = 0; i < mid - 1; i += 2) {
+	for (size_t i = 0; i < deque.size() - 1; i += 2) {
 		if (deque[i] > deque[i + 1]) {
 			std::swap(deque[i], deque[i + 1]);
 		}
 	}
+	
+	// deque for storing paired elements
+	std::deque<std::pair<int, int> > pairs;
+
+	// 1. Pairwise comparison
+	for (size_t i = 0; i < deque.size(); i += 2) {
+		if (i < deque.size() - 1) {
+			// Create a pair with the two elements
+			std::pair <int, int > p(deque[i + 1], deque[i]);
+			pairs.push_back(p);
+		} else {
+			// If odd number of elements, add the last element as a pair with itself
+			odd = true;
+			std::pair <int, int > p(deque[i], deque[i]);
+			pairs.push_back(p);
+		}
+	}
+  
 
 	// 2. Split into larger and smaller elements.
-	for (size_t i = 0; i < deque.size(); i++) {
-		if ((i % 2) != 0)
-			Larg.push_back(deque[i]);
-		else
-			Small.push_back(deque[i]);
+	std::deque<int > Larg;
+	std::deque<int> Small;
+	for (size_t i = 0; i < pairs.size(); i++) {
+		Larg.push_back(pairs[i].first);
+		Small.push_back(pairs[i].second);
 	}
+
 
 	// 2. Recursively sort larger elements
 	PmergeMe::sortDequeFJ(Larg);
 
 	// 4. Insert the unpaired element and sort remaining elements
-	if (deque.size() % 2 != 0) {
-		Small.push_back(Larg.front());
-		Larg.erase(Larg.begin());
+	if (odd == true) {
+		Small.pop_back();
 	}
-
+/////////////////////////////////////
+	// insert the element paired with the smalles of Larg
+	for (size_t i = 0; i < pairs.size() - 1; i++)
+	{
+		if (pairs[i].first == Larg[0]) {
+			Larg.insert (Larg.begin(), Small[i]);
+			Small.erase (Small.begin() + i);
+			break ;
+		}
+	}
+//////////////////////////////////////
 	// 5. Merge the sorted Larg elements with the Small elements
 	// using insertion sort with binary search for efficiency
 	for (size_t i = 0; i < Small.size(); i++) {
@@ -248,18 +285,19 @@ void PmergeMe::sortDequeFJ(std::deque<int> &deque) {
 		int left = 0;
 		int right = Larg.size() - 1;
 		while (left <= right) {
-		int mid = (left + right) / 2;
-		if (Small[i] < Larg[mid]) {
-			right = mid - 1;
-		} else {
-			left = mid + 1;
-		}
+			int mid = (left + right) / 2;
+			if (Small[i] < Larg[mid]) {
+				right = mid - 1;
+			} else {
+				left = mid + 1;
+			}
 		}
 		// Insert element at the found position
 		Larg.insert(Larg.begin() + left, Small[i]);
 	}
 	deque = Larg;
 }
+
 
 // Geters.
 std::vector<int> PmergeMe::getUnsortedVector () const {
@@ -285,10 +323,69 @@ PmergeMe::~PmergeMe () {}
 
 
 
-//////////////
+///////////////////////////////////////////////////////////////////////
 // std::vector <std::pair<int, int> > PmergeMe::getSortedVectorPair () const { return sortedVectorPair; }
 
 // ////////////////////////////////////////
+// // Sorting with Ford-Johnson algorithm for std::deque
+// void PmergeMe::sortDequeFJ(std::deque<int> &deque) {
+// 	if (deque.size() < 2) {
+// 		return ;
+// 	}
+
+// 	std::deque<int> Larg;
+// 	std::deque<int> Small;
+// 	// 1. Grouping and Pairwise comparison
+// 	size_t mid = deque.size() / 2;
+// 	// Separate the last element if odd
+// 	if (deque.size() % 2 != 0) {
+// 		mid++;
+// 	}
+
+// 	// Group and compare elements in pairs
+// 	for (size_t i = 0; i < mid - 1; i += 2) {
+// 		if (deque[i] > deque[i + 1]) {
+// 			std::swap(deque[i], deque[i + 1]);
+// 		}
+// 	}
+
+// 	// 2. Split into larger and smaller elements.
+// 	for (size_t i = 0; i < deque.size(); i++) {
+// 		if ((i % 2) != 0)
+// 			Larg.push_back(deque[i]);
+// 		else
+// 			Small.push_back(deque[i]);
+// 	}
+
+// 	// 2. Recursively sort larger elements
+// 	PmergeMe::sortDequeFJ(Larg);
+
+// 	// 4. Insert the unpaired element and sort remaining elements
+// 	if (deque.size() % 2 != 0) {
+// 		Small.push_back(Larg.front());
+// 		Larg.erase(Larg.begin());
+// 	}
+
+// 	// 5. Merge the sorted Larg elements with the Small elements
+// 	// using insertion sort with binary search for efficiency
+// 	for (size_t i = 0; i < Small.size(); i++) {
+// 		// Perform binary search to find insertion position
+// 		int left = 0;
+// 		int right = Larg.size() - 1;
+// 		while (left <= right) {
+// 		int mid = (left + right) / 2;
+// 		if (Small[i] < Larg[mid]) {
+// 			right = mid - 1;
+// 		} else {
+// 			left = mid + 1;
+// 		}
+// 		}
+// 		// Insert element at the found position
+// 		Larg.insert(Larg.begin() + left, Small[i]);
+// 	}
+// 	deque = Larg;
+// }
+
 // PmergeMe::PmergeMe (std::vector <std::pair<int, int> >& Vp) : unsortedVectorPair(Vp) {
 // 	sortedVectorPair = unsortedVectorPair;
 // 	clock_t start = clock();
